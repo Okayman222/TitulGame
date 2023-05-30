@@ -17,7 +17,8 @@ FPS = 60
 col = math.ceil(win_width / bg_width) + 1
 
 
-
+isjump = False
+jump = 10
 
 scroll = 0
 
@@ -31,8 +32,35 @@ class GameSprite(pygame.sprite.Sprite):
         self.rect.x = player_x
         self.rect.y = player_y
 
+
+
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and self.rect.x > 5:
+            self.rect.x -= 10
+        if keys[pygame.K_RIGHT] and self.rect.x < win_width - 80:
+            self.rect.x += 10
+
+        if not (isjump):
+            if keys[pygame.K_LEFT] and self.rect.x > 5:
+                self.rect.x -= 10
+
+            if keys[pygame.K_RIGHT] and self.rect.x < win_width - 80:
+                self.rect.x += 10
+            if keys[pygame.K_SPACE]:
+                if jump >= -10:
+                    if jump < 0:
+                        self.rect.y += (jump ** 2) / 4
+                    else:
+                        self.rect.y -= (jump ** 2) / 4
+                    jump -= 1
+                else:
+                    isjumps = True
+                    jump = 10
+
 
 
 
@@ -54,8 +82,7 @@ while game:
         scroll = 0
 
     hero.reset()
-
-
+    hero.update()
 
     pygame.display.update()
     clock.tick(FPS)
